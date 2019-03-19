@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ServcieAccount
+
+metadate: 
+  name: webui-admin
+  namespace: myspace
+
+---
+ 
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+
+metadata:
+  name: webui-admin-crb
+  namespace: myspace
+
+# cluster role is a cluster wide service account (user attached to a program). So we are giving a port a role in the cluster.
+roleRef:
+  apiGroup: rbac.authorization.k8s.io/v1beta1
+  kind: ClusterRole
+  name: cluster-admin
+
+#creating a subject to bond to above roleRef
+subjects:
+- apiGroup:  rbac.authorization.k8s.io/v1beta1
+  kind: ServiceAccount
+  name: webui-admin
+
+# Back to terminal and create resource
+# [ kubectl apply -f webui-sa.yaml ]
+# [ kubectl describe sa/webiui-admin -n myspace ]
+# [ kubectl describe secret/webui-admin-token-bgbk9 -n myspace ]
+
+# Token will be generated, paste in t kubernetes token --> click "Sign in"
+# [ kubectl describe sa/webiui-admin -n myspace ]
+
+# To view secret:
+# [ kubectl get secret -n myspace ]
+#* proxy server needs to be running. DO NOT CLOSE

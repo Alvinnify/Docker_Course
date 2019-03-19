@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name:  myapp-pod
+  namespace: myspace
+  labels:
+    name:  myapp-pod
+
+spec:
+  # number of instances
+  replicas: 5
+  selector: 
+    matchLabels:
+      name: mydb-pod
+  template: 
+    # the pod that i am going to deploy
+    metadata:
+      name: mydb_pod
+      labels:
+        name: mydb-pod
+        
+    spec:
+      containers:
+      - name: mydb-conatiner
+        image: stackupiss/northwind-app:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+name: myapp-svc
+namespace: myspace
+labels:
+  name: myapp-svc
+
+spec:
+  type: LoadBalancer
+  selector: 
+    name: myapp-pod
+  ports: 
+  - port: 80
+    targetPort: 3000
+
+  env:
+  - name: DB_HOST
+    value: mydb-svc.myspace.svc.cluster.local
+    # section below for manual scaling
+  - name: INSTANCE_IP_ADDRESS
+    valueFrom: 
+      fieldRef:
+        fieldPath: status.hostIP
+
+  # Complete webui-sa.yaml then edit above as follow for manual scaling.
+  # Specifying IP address on fieldpath. If does not show on webapp, change to "status.podIP"
+  # Manual Scaling [ kubectl scale --relplica=4 deploy/app-deploy -n myspace ]
+  # Proceed to create appscaler.yaml for auto scaling.
+
+  resources:
+    requests:
+      cpu: "100m"
+
+    # Run [ kubectl cluster-info ] - show revela internal dns
+    # Run [ kubectl apply -f app-deploy.yaml ] wait for IP provising to complete
+    # Once above provision complete, go to assign ip address <EXTERNAL-IP> to view application
+    
