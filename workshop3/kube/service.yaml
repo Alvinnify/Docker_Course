@@ -5,9 +5,9 @@ metadata:
   name:  demopythonappsvc
 spec:
   selector:
-    app:  Selector Label
-  type:  LoadBalancer | ClusterIP | NodePort
+    app:  demopythonappdp
+  type:  LoadBalancer 
   ports:
-  - name:  name-of-the-port
+  - name:  http
     port:  80
     targetPort:  8080
