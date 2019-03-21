@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Gateway
+metadata:
+  name: weather-ingress
+  namespace: default
+
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - weather.157.230.68.39.nip.io
+    port:
+      number: 80
+      protocol: HTTP
+      name:  HTTP
