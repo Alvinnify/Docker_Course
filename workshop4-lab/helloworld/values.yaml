@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  respository: nginx
+  tag: stable
+  pullPolicay: IfNotPresent
+
+nameOverrride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 6000
+  
+version: v1
+
+deployment:
+  conatinerPort: 6000
+
